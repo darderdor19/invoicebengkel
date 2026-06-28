@@ -1,0 +1,1017 @@
+/* ==========================================
+   CSS STYLING - BENGKEL LAS JOKO MANDIRI
+   ========================================== */
+
+/* --- Design Variables --- */
+:root {
+    /* Dashboard Theme (Dark & Green) */
+    --dash-bg: #0b0c10;
+    --dash-card-bg: #141822;
+    --dash-sidebar: #0e111a;
+    --dash-text: #e2e8f0;
+    --dash-text-muted: #94a3b8;
+    --dash-accent: #00ff66;
+    --dash-accent-hover: #00e676;
+    --dash-accent-dim: rgba(0, 255, 102, 0.15);
+    --dash-border: #1e293b;
+    --dash-input-bg: #0f131a;
+    --dash-input-border: #334155;
+    
+    /* PDF/Invoice Theme (Black & White, Formal) */
+    --pdf-bg: #ffffff;
+    --pdf-text-dark: #000000;
+    --pdf-text-light: #1f2937;
+    --pdf-header-beige: #f3f4f6; /* Grayscale Light Gray */
+    --pdf-total-gray: #000000;   /* Solid Black */
+    --pdf-border-light: #000000; /* Solid Black */
+    --pdf-font-main: 'Inter', sans-serif;
+    --pdf-font-heading: 'Inter', sans-serif;
+    --pdf-font-signature: 'Inter', sans-serif;
+}
+
+/* --- Global Reset & Animations --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--dash-bg);
+    color: var(--dash-text);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.5;
+    overflow-x: hidden;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes modalScale {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.4s ease forwards;
+}
+
+/* --- Layout & Structure --- */
+.app-container {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    min-height: 100vh;
+}
+
+/* --- Sidebar Header --- */
+.sidebar-header {
+    background-color: var(--dash-sidebar);
+    border-right: 1px solid var(--dash-border);
+    padding: 2.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-icon {
+    color: var(--dash-accent);
+    width: 32px;
+    height: 32px;
+}
+
+.brand-info h1 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+}
+
+.brand-info span {
+    font-size: 0.75rem;
+    color: var(--dash-accent);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.owner-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.02);
+    padding: 1.2rem;
+    border-radius: 8px;
+    border: 1px solid var(--dash-border);
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    color: var(--dash-text-muted);
+}
+
+.contact-item i {
+    color: var(--dash-accent);
+    width: 16px;
+    height: 16px;
+}
+
+/* --- Main Content Area --- */
+.main-content {
+    padding: 2.5rem;
+    overflow-y: auto;
+}
+
+.dashboard-card {
+    background-color: var(--dash-card-bg);
+    border: 1px solid var(--dash-border);
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 2rem;
+}
+
+.section-title i {
+    color: var(--dash-accent);
+    width: 24px;
+    height: 24px;
+}
+
+.section-title h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* --- Grid Systems & Form Inputs --- */
+.grid-2-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-group label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--dash-text-muted);
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+    background-color: var(--dash-input-bg);
+    border: 1px solid var(--dash-input-border);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.input-wrapper i {
+    position: absolute;
+    left: 12px;
+    color: var(--dash-text-muted);
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
+}
+
+.input-wrapper input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding: 12px 12px 12px 42px;
+    color: var(--dash-text);
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.input-wrapper input::placeholder {
+    color: #4b5563;
+}
+
+.input-wrapper:focus-within {
+    border-color: var(--dash-accent);
+    box-shadow: 0 0 0 3px var(--dash-accent-dim);
+}
+
+.input-wrapper-group {
+    display: flex;
+    gap: 10px;
+}
+
+.min-width-30 { flex: 3; }
+.min-width-40 { flex: 4; }
+.min-width-50 { flex: 5; }
+
+.form-divider {
+    border: 0;
+    height: 1px;
+    background: var(--dash-border);
+    margin: 2.5rem 0;
+}
+
+.section-subtitle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.section-subtitle i {
+    color: var(--dash-accent);
+    width: 20px;
+    height: 20px;
+}
+
+.section-subtitle h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+/* --- Dashboard Materials Table --- */
+.items-table-container {
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.dashboard-table th {
+    background-color: var(--dash-input-bg);
+    border: 1px solid var(--dash-border);
+    padding: 12px;
+    text-align: left;
+    color: var(--dash-text-muted);
+    font-weight: 600;
+}
+
+.dashboard-table td {
+    border: 1px solid var(--dash-border);
+    padding: 10px;
+    vertical-align: middle;
+}
+
+.dashboard-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.dashboard-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.01);
+}
+
+.dashboard-table input {
+    width: 100%;
+    background: var(--dash-input-bg);
+    border: 1px solid var(--dash-input-border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    color: var(--dash-text);
+    outline: none;
+    font-size: 0.9rem;
+    transition: border-color 0.2s ease;
+}
+
+.dashboard-table input:focus {
+    border-color: var(--dash-accent);
+}
+
+.dashboard-table td.center-align {
+    text-align: center;
+}
+
+.dashboard-table td.right-align {
+    text-align: right;
+    padding-right: 15px;
+    font-weight: 500;
+}
+
+/* Table buttons */
+.btn-delete-row {
+    background: transparent;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.btn-delete-row:hover {
+    background: rgba(239, 68, 68, 0.1);
+    transform: scale(1.05);
+}
+
+.btn-delete-row i {
+    width: 18px;
+    height: 18px;
+}
+
+.table-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.25rem;
+}
+
+.total-summary-card {
+    background: rgba(0, 255, 102, 0.05);
+    border: 1px solid rgba(0, 255, 102, 0.2);
+    padding: 12px 24px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.total-label {
+    font-size: 0.9rem;
+    color: var(--dash-text-muted);
+    font-weight: 500;
+}
+
+.total-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--dash-accent);
+}
+
+/* --- Buttons --- */
+.btn-primary {
+    background-color: var(--dash-accent);
+    color: #000000;
+    border: none;
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 15px var(--dash-accent-dim);
+}
+
+.btn-primary:hover {
+    background-color: var(--dash-accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 255, 102, 0.3);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--dash-text);
+    border: 1px solid var(--dash-border);
+    padding: 10px 18px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background-color: var(--dash-border);
+    color: #ffffff;
+}
+
+.action-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 2rem;
+}
+
+/* --- Modal Overlay & Card --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: none; /* Controlled by JS */
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-card {
+    background-color: #1a1f2c;
+    border: 1px solid var(--dash-border);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 950px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    animation: modalScale 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.modal-header {
+    padding: 15px 24px;
+    border-bottom: 1px solid var(--dash-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.btn-close {
+    background: transparent;
+    border: none;
+    color: var(--dash-text-muted);
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-close:hover {
+    color: #ffffff;
+    background: var(--dash-border);
+}
+
+.modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    background-color: #10121a;
+    display: flex;
+    justify-content: center;
+}
+
+.modal-footer {
+    padding: 15px 24px;
+    border-top: 1px solid var(--dash-border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+/* Modal Actions */
+.btn-cancel, .btn-download, .btn-print {
+    border: none;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn-cancel {
+    background-color: transparent;
+    color: var(--dash-text-muted);
+    border: 1px solid var(--dash-border);
+}
+
+.btn-cancel:hover {
+    background-color: var(--dash-border);
+    color: white;
+}
+
+.btn-download {
+    background-color: var(--dash-accent);
+    color: #000;
+}
+
+.btn-download:hover {
+    background-color: var(--dash-accent-hover);
+    box-shadow: 0 4px 12px rgba(0, 255, 102, 0.2);
+}
+
+.btn-print {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.btn-print:hover {
+    background-color: #2563eb;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+}
+
+/* Spinner for loading state */
+.loading-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    border-top-color: #000000;
+    animation: spin 0.8s linear infinite;
+    margin-right: 4px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+
+/* ========================================================
+   PDF/INVOICE RENDER VIEW (Exactly matches requested design)
+   ======================================================== */
+
+.invoice-container-outer {
+    background-color: #1e1e1e; /* background wrapper in UI */
+    padding: 15px;
+    border-radius: 8px;
+}
+
+/* Strict A4 Styling for screen preview and PDF download */
+.invoice-pdf-layout {
+    background-color: var(--pdf-bg);
+    color: var(--pdf-text-dark);
+    width: 210mm; /* Standard A4 width */
+    min-height: 297mm; /* Standard A4 height */
+    padding: 22mm 18mm;
+    margin: 0 auto;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    /* Clean typewriter monospace styled look matching screenshot */
+    font-family: var(--pdf-font-main);
+    font-size: 13px;
+    box-sizing: border-box;
+}
+
+/* Top invoice title header */
+.invoice-pdf-header {
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.invoice-pdf-title-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.invoice-pdf-title {
+    font-family: var(--pdf-font-heading);
+    font-size: 34px;
+    font-weight: 400;
+    letter-spacing: 4px;
+    margin: 0;
+    color: var(--pdf-text-dark);
+}
+
+.invoice-pdf-title-line {
+    flex-grow: 1;
+    height: 1px;
+    background-color: #a0a0a0;
+    margin-left: 25px;
+}
+
+/* Metadata blocks under header */
+.invoice-pdf-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.invoice-pdf-meta-left {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.pdf-meta-block {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.pdf-meta-label {
+    font-weight: bold;
+    color: var(--pdf-text-dark);
+    font-size: 13px;
+}
+
+.pdf-meta-val {
+    color: var(--pdf-text-light);
+    font-size: 12px;
+}
+
+.invoice-pdf-meta-right {
+    display: flex;
+    flex-direction: column;
+    max-width: 280px;
+    text-align: left;
+}
+
+.pdf-meta-val-block {
+    display: block;
+    line-height: 1.4;
+    font-size: 12px;
+}
+
+.pdf-meta-val-block.text-bold {
+    font-weight: bold;
+    margin-bottom: 4px;
+    font-size: 13px;
+}
+
+.pdf-meta-val-block.text-light {
+    color: var(--pdf-text-light);
+}
+
+/* Table view matching screenshot */
+.invoice-pdf-table-wrapper {
+    flex-grow: 1;
+    margin-top: 10px;
+    margin-bottom: 25px;
+}
+
+.invoice-pdf-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-top: 1px solid var(--pdf-border-light);
+    border-bottom: 1px solid var(--pdf-border-light);
+}
+
+.invoice-pdf-table th {
+    background-color: var(--pdf-header-beige);
+    color: var(--pdf-text-dark);
+    font-family: var(--pdf-font-heading);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    padding: 14px 10px;
+    text-align: center;
+    border-left: 1px solid var(--pdf-border-light);
+    border-right: 1px solid var(--pdf-border-light);
+}
+
+/* First and last th borders should match container boundaries */
+.invoice-pdf-table th:first-child {
+    border-left: none;
+}
+.invoice-pdf-table th:last-child {
+    border-right: none;
+}
+
+.invoice-pdf-table td {
+    padding: 12px 10px;
+    color: var(--pdf-text-dark);
+    font-size: 13px;
+    border-left: 1px solid var(--pdf-border-light);
+    border-right: 1px solid var(--pdf-border-light);
+    border-bottom: 1px solid #eaeaea; /* very light divider */
+}
+
+.invoice-pdf-table td:first-child {
+    border-left: none;
+}
+.invoice-pdf-table td:last-child {
+    border-right: none;
+}
+
+.invoice-pdf-table .col-no {
+    width: 8%;
+    text-align: center;
+}
+
+.invoice-pdf-table .col-desc {
+    width: 48%;
+    text-align: left;
+}
+
+.invoice-pdf-table .col-qty {
+    width: 12%;
+    text-align: center;
+}
+
+.invoice-pdf-table .col-price {
+    width: 16%;
+    text-align: center;
+}
+
+.invoice-pdf-table .col-subtotal {
+    width: 16%;
+    text-align: right;
+    padding-right: 15px;
+}
+
+.invoice-pdf-table tbody tr {
+    height: 38px;
+}
+
+/* Grand Total Row style */
+.pdf-total-row {
+    background-color: var(--pdf-total-gray);
+    color: #ffffff !important;
+}
+
+.pdf-total-row td {
+    border: none !important;
+    padding: 16px 15px;
+}
+
+.pdf-total-label {
+    font-family: var(--pdf-font-heading);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-align: right;
+    color: #ffffff !important;
+}
+
+.pdf-total-val {
+    font-size: 14px;
+    font-weight: bold;
+    text-align: right;
+    color: #ffffff !important;
+    padding-right: 15px !important;
+}
+
+/* Footer Section */
+.invoice-pdf-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    margin-top: auto;
+    font-family: var(--pdf-font-main);
+}
+
+.pdf-footer-left {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 50%;
+}
+
+.pdf-payment-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 13px;
+    text-transform: capitalize;
+}
+
+.pdf-payment-detail {
+    font-size: 12px;
+    color: var(--pdf-text-light);
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    line-height: 1.4;
+}
+
+.pdf-payment-detail span:first-child {
+    font-weight: bold;
+    color: var(--pdf-text-dark);
+}
+
+.pdf-brand-tagline {
+    margin-top: 15px;
+    font-size: 11px;
+    color: var(--pdf-text-light);
+    line-height: 1.4;
+}
+
+.pdf-brand-tagline strong {
+    color: var(--pdf-text-dark);
+}
+
+/* Signature block */
+.pdf-footer-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40%;
+}
+
+.pdf-signature-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.pdf-signature-space {
+    height: 60px;
+}
+
+.pdf-signature-line {
+    width: 180px;
+    height: 1px;
+    background-color: var(--pdf-text-dark);
+    margin-bottom: 8px;
+}
+
+.pdf-signature-name-under {
+    font-size: 13px;
+    color: var(--pdf-text-dark);
+    font-weight: bold;
+    font-family: var(--pdf-font-main);
+    text-align: center;
+}
+
+
+/* ========================================================
+   RESPONSIVE DESIGN MEDIA QUERIES
+   ======================================================== */
+@media (max-width: 1024px) {
+    .app-container {
+        grid-template-columns: 1fr;
+    }
+    .sidebar-header {
+        border-right: none;
+        border-bottom: 1px solid var(--dash-border);
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem 2rem;
+    }
+    .owner-contact {
+        flex-direction: row;
+        padding: 0.5rem 1rem;
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        padding: 1.5rem;
+    }
+    .dashboard-card {
+        padding: 1.5rem;
+    }
+    .grid-2-col {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+    #bank-info-wrapper {
+        grid-template-columns: 1fr !important;
+        gap: 1.25rem !important;
+    }
+    .sidebar-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    .owner-contact {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .table-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1.25rem;
+    }
+    .total-summary-card {
+        justify-content: space-between;
+    }
+    .modal-card {
+        max-height: 95vh;
+    }
+    .modal-footer {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .modal-footer button {
+        flex: 1 1 calc(50% - 10px);
+        justify-content: center;
+    }
+    /* scroll wrapper for A4 layout preview on small screens */
+    .invoice-container-outer {
+        padding: 5px;
+        overflow-x: auto;
+        width: 100%;
+    }
+    .modal-body {
+        justify-content: flex-start;
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar-header {
+        padding: 1.25rem 1rem;
+    }
+    .owner-contact {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .modal-footer button {
+        flex: 1 1 100%;
+    }
+}
+
+
+/* ========================================================
+   PRINT STYLES - Hides dashboard, prints fullscreen PDF page
+   ======================================================== */
+
+@media print {
+    /* Hide everything on screen except the print card */
+    body, html {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        font-family: 'Inter', sans-serif !important;
+    }
+    
+    .app-container,
+    .modal-overlay,
+    .modal-header,
+    .modal-footer {
+        display: none !important;
+    }
+    
+    /* Make print overlay visible and fullscreen */
+    .modal-overlay {
+        position: relative !important;
+        display: block !important;
+        background: transparent !important;
+        padding: 0 !important;
+        width: auto !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+    
+    .modal-card {
+        background: transparent !important;
+        border: none !important;
+        max-width: none !important;
+        max-height: none !important;
+        display: block !important;
+        box-shadow: none !important;
+    }
+    
+    .modal-body {
+        padding: 0 !important;
+        background: transparent !important;
+        display: block !important;
+        overflow: visible !important;
+    }
+    
+    .invoice-container-outer {
+        background: transparent !important;
+        padding: 0 !important;
+    }
+    
+    .invoice-pdf-layout {
+        width: 100% !important;
+        min-height: auto !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        position: relative !important;
+        display: flex !important;
+    }
+    
+    /* Fix page size */
+    @page {
+        size: A4;
+        margin: 15mm 15mm;
+    }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "invoice-generator-joko-mandiri",
+  "version": "1.0.0",
+  "description": "Invoice Generator Web Tool for BengkelLas Joko Mandiri",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx -y http-server -p 3000"
+  },
+  "keywords": [
+    "invoice",
+    "generator",
+    "bengkel",
+    "las"
+  ],
+  "author": "Mujianto",
+  "license": "ISC"
+}

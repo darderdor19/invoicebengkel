@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Generator - BengkelLas Joko Mandiri</title>
+    <!-- Google Fonts: Inter for UI, Montserrat for Invoice Heading, Caveat for Signature -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- html2pdf.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar / Brand Header -->
+        <header class="sidebar-header">
+            <div class="brand-logo">
+                <i data-lucide="wrench" class="logo-icon"></i>
+                <div class="brand-info">
+                    <h1>Joko Mandiri</h1>
+                    <span>Bengkel Las & Konstruksi</span>
+                </div>
+            </div>
+            <div class="owner-contact">
+                <div class="contact-item">
+                    <i data-lucide="user"></i>
+                    <span>Mujianto</span>
+                </div>
+                <div class="contact-item">
+                    <i data-lucide="phone"></i>
+                    <span>0853 6120 8615</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Form Area -->
+        <main class="main-content">
+            <div class="dashboard-card form-section animate-fade-in">
+                <div class="section-title">
+                    <i data-lucide="file-plus"></i>
+                    <h2>Buat Invoice Baru</h2>
+                </div>
+
+                <div class="grid-2-col">
+                    <!-- Invoice Details -->
+                    <div class="input-group">
+                        <label for="invoice-no">No. Invoice</label>
+                        <div class="input-wrapper">
+                            <i data-lucide="hash"></i>
+                            <input type="text" id="invoice-no" placeholder="Contoh: #JKM-1002">
+                        </div>
+                    </div>
+
+                    <!-- Invoice Date -->
+                    <div class="input-group">
+                        <label for="invoice-date">Tanggal Pembuatan</label>
+                        <div class="input-wrapper">
+                            <i data-lucide="calendar"></i>
+                            <input type="date" id="invoice-date">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-2-col">
+                    <!-- Client Details -->
+                    <div class="input-group">
+                        <label for="client-name">Nama Penerima / Tujuan</label>
+                        <div class="input-wrapper">
+                            <i data-lucide="user-check"></i>
+                            <input type="text" id="client-name" placeholder="Nama Pelanggan / Perusahaan">
+                        </div>
+                    </div>
+
+                    <!-- Client Address -->
+                    <div class="input-group">
+                        <label for="client-address">Alamat Penerima</label>
+                        <div class="input-wrapper">
+                            <i data-lucide="map-pin"></i>
+                            <input type="text" id="client-address" placeholder="Alamat lengkap penerima">
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="form-divider">
+
+                <!-- Items Section (Bahan & Harga) -->
+                <div class="section-subtitle">
+                    <i data-lucide="layers"></i>
+                    <h3>Detail Bahan & Jasa</h3>
+                </div>
+
+                <div class="items-table-container">
+                    <table class="dashboard-table" id="items-table">
+                        <thead>
+                            <tr>
+                                <th width="6%">No</th>
+                                <th width="50%">Deskripsi Bahan / Pekerjaan</th>
+                                <th width="12%">Qty</th>
+                                <th width="16%">Harga Satuan (Rp)</th>
+                                <th width="16%">Subtotal (Rp)</th>
+                                <th width="6%">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="items-tbody">
+                            <!-- Dynamic rows will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-actions">
+                    <button type="button" class="btn-secondary" id="add-item-btn">
+                        <i data-lucide="plus-circle"></i> Tambah Item/Bahan
+                    </button>
+                    <div class="total-summary-card">
+                        <span class="total-label">Grand Total:</span>
+                        <span class="total-value" id="grand-total-val">Rp 0</span>
+                    </div>
+                </div>
+
+                <hr class="form-divider">
+
+                <!-- Signature & Payment config -->
+                <div class="grid-2-col">
+                    <!-- Payment Method -->
+                    <div class="input-group">
+                        <label for="payment-method">Metode Pembayaran</label>
+                        <div class="input-wrapper">
+                            <i data-lucide="credit-card"></i>
+                            <select id="payment-method" style="width: 100%; background: transparent; border: none; padding: 12px 12px 12px 42px; color: var(--dash-text); font-size: 0.95rem; outline: none; cursor: pointer; appearance: none;">
+                                <option value="tf" style="background-color: var(--dash-input-bg); color: var(--dash-text);">Transfer Bank</option>
+                                <option value="cash" style="background-color: var(--dash-input-bg); color: var(--dash-text);">Cash / Tunai</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Signee Name -->
+                    <div class="input-group">
+                        <label for="signature-name">Nama Penandatangan (Di bawah garis TTD)</label>
+                        <div class="input-wrapper">
+                            <i data-lucide="user"></i>
+                            <input type="text" id="signature-name" placeholder="Nama Penandatangan" value="Mujianto">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bank details wrapper -->
+                <div id="bank-info-wrapper" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; transition: all 0.3s ease;">
+                    <div class="input-group">
+                        <label for="bank-name">Nama Bank</label>
+                        <div class="input-wrapper">
+                            <i data-lucide="landmark"></i>
+                            <input type="text" id="bank-name" placeholder="Nama Bank" value="Mandiri">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="bank-account">Nomor Rekening</label>
+                        <div class="input-wrapper">
+                            <i data-lucide="hash"></i>
+                            <input type="text" id="bank-account" placeholder="Nomor Rekening" value="123-456-7890">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="bank-owner">Atas Nama (Pemilik Rekening)</label>
+                        <div class="input-wrapper">
+                            <i data-lucide="user-cog"></i>
+                            <input type="text" id="bank-owner" placeholder="Atas Nama" value="Mujianto">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="action-row">
+                    <button type="button" class="btn-primary" id="btn-preview">
+                        <i data-lucide="eye"></i> Preview & Konfirmasi Invoice
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Confirmation & Preview Modal -->
+    <div class="modal-overlay" id="preview-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Konfirmasi & Preview Invoice</h3>
+                <button class="btn-close" id="btn-close-modal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <!-- Outer wrapper to lock standard A4 preview ratios and background -->
+                <div class="invoice-container-outer">
+                    <!-- The actual element that html2pdf will render, styled exactly as the image -->
+                    <div id="invoice-pdf-render" class="invoice-pdf-layout">
+                        <!-- Invoice Header -->
+                        <div class="invoice-pdf-header">
+                            <div class="invoice-pdf-top-row" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px; flex-wrap: wrap; gap: 15px;">
+                                <div class="invoice-pdf-company-info" style="text-align: left;">
+                                    <h2 style="font-family: var(--pdf-font-heading); font-size: 20px; font-weight: bold; margin: 0 0 6px 0; letter-spacing: 0.5px; color: var(--pdf-text-dark);">Bengkel Las Joko Mandiri</h2>
+                                    <p style="font-size: 11px; color: var(--pdf-text-light); margin: 0; line-height: 1.4; font-family: var(--pdf-font-main);">
+                                        Jl. Platina VI, Titi Papan, Kec. Medan Deli,<br>
+                                        Kota Medan, Sumatera Utara 20244
+                                    </p>
+                                </div>
+                                <div class="invoice-pdf-title-side" style="text-align: right;">
+                                    <h1 class="invoice-pdf-title" style="font-family: var(--pdf-font-heading); font-size: 28px; font-weight: bold; letter-spacing: 2px; margin: 0; color: var(--pdf-text-dark);">INVOICE</h1>
+                                </div>
+                            </div>
+                            <div class="invoice-pdf-title-line" style="width: 100%; height: 1px; background-color: var(--pdf-border-light); margin-bottom: 25px;"></div>
+                            
+                            <div class="invoice-pdf-meta-row">
+                                <div class="invoice-pdf-meta-left">
+                                    <div class="pdf-meta-block">
+                                        <span class="pdf-meta-label">Invoice No:</span>
+                                        <span class="pdf-meta-val" id="pdf-invoice-no">#123456</span>
+                                    </div>
+                                    <div class="pdf-meta-block">
+                                        <span class="pdf-meta-label">Date Issued:</span>
+                                        <span class="pdf-meta-val" id="pdf-invoice-date">01 April 2022</span>
+                                    </div>
+                                </div>
+                                <div class="invoice-pdf-meta-right">
+                                    <span class="pdf-meta-label">Issued to:</span>
+                                    <span class="pdf-meta-val-block text-bold" id="pdf-client-name">Alfredo Torres</span>
+                                    <span class="pdf-meta-val-block text-light" id="pdf-client-address">123 Anywhere St.,<br>Any City, ST 12345</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Invoice Table -->
+                        <div class="invoice-pdf-table-wrapper">
+                            <table class="invoice-pdf-table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-no">NO</th>
+                                        <th class="col-desc">DESCRIPTION</th>
+                                        <th class="col-qty">QTY</th>
+                                        <th class="col-price">PRICE</th>
+                                        <th class="col-subtotal">SUBTOTAL</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pdf-items-tbody">
+                                    <!-- Dynamic rows from JavaScript -->
+                                </tbody>
+                                <tfoot>
+                                    <tr class="pdf-total-row">
+                                        <td colspan="4" class="pdf-total-label">GRAND TOTAL</td>
+                                        <td class="pdf-total-val" id="pdf-grand-total">Rp 0</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <!-- Invoice Footer -->
+                        <div class="invoice-pdf-footer">
+                            <div class="pdf-footer-left">
+                                <h4 class="pdf-payment-title">Payment Information</h4>
+                                <div id="pdf-bank-details">
+                                    <div class="pdf-payment-detail">
+                                        <span>Bank Name:</span>
+                                        <span id="pdf-bank-name">Mandiri</span>
+                                    </div>
+                                    <div class="pdf-payment-detail">
+                                        <span>Account No:</span>
+                                        <span id="pdf-bank-account">123-456-7890</span>
+                                    </div>
+                                    <div class="pdf-payment-detail">
+                                        <span>Account Holder:</span>
+                                        <span id="pdf-bank-owner">Mujianto</span>
+                                    </div>
+                                </div>
+                                <div id="pdf-cash-details" style="display: none;">
+                                    <div class="pdf-payment-detail">
+                                        <span>Method:</span>
+                                        <span>Cash / Tunai</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="pdf-brand-tagline">
+                                    <strong>BengkelLas Joko Mandiri</strong><br>
+                                    Telp: 0853 6120 8615
+                                </div>
+                            </div>
+                            <div class="pdf-footer-right">
+                                <div class="pdf-signature-area">
+                                    <div class="pdf-signature-space" style="height: 60px;"></div>
+                                    <div class="pdf-signature-line"></div>
+                                    <span class="pdf-signature-name-under" id="pdf-sig-name-under">Mujianto</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" id="btn-edit-invoice">
+                    <i data-lucide="edit-3"></i> Edit / Kembali
+                </button>
+                <button type="button" class="btn-download" id="btn-download-pdf">
+                    <i data-lucide="download"></i> Download PDF
+                </button>
+                <button type="button" class="btn-print" id="btn-print-direct">
+                    <i data-lucide="printer"></i> Cetak Invoice
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
