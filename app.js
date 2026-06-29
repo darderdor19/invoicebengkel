@@ -343,42 +343,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- PDF Export and Printing ---
 
-    // Download PDF handler using html2pdf (via A4 cloned rendering to prevent mobile clipping)
+    // Download PDF handler using html2pdf (direct rendering with temporary scale-reset to prevent mobile clipping)
     btnDownloadPdf.addEventListener('click', () => {
-        const originalElement = document.getElementById('invoice-pdf-render');
+        const renderArea = document.getElementById('invoice-pdf-render');
+        if (!renderArea) return;
         
-        // Create a wrapper container matching the invoice structure
-        const container = document.createElement('div');
-        container.className = 'invoice-container-outer';
-        container.style.position = 'fixed';
-        container.style.left = '0';
-        container.style.top = '0';
-        container.style.zIndex = '1'; // Behind the modal overlay (z-index 1000) but visible to the paint engine
-        container.style.width = '210mm';
-        container.style.height = '297mm';
-        container.style.overflow = 'hidden';
-        container.style.opacity = '1';
-        container.style.pointerEvents = 'none';
-
-        // Clone the element to render it at full native A4 size
-        const element = originalElement.cloneNode(true);
-        element.style.transform = 'none'; // Ensure scale is reset on download clone
-        element.style.width = '210mm';
-        element.style.minHeight = '297mm';
+        const container = renderArea.parentElement;
         
-        container.appendChild(element);
-        document.body.appendChild(container);
+        // Save original styles
+        const originalTransform = renderArea.style.transform;
+        const originalTransformOrigin = renderArea.style.transformOrigin;
+        const originalContainerHeight = container.style.height;
         
-        // Setup options - forcing A4 portrait mode
+        // Temporary reset scale styles for clean desktop-width canvas capture
+        renderArea.style.transform = 'none';
+        renderArea.style.transformOrigin = 'initial';
+        container.style.height = 'auto';
+        
+        // Setup options - forcing A4 portrait mode and viewport width parameters
         const opt = {
             margin:       0,
             filename:     `Invoice_${clientNameInput.value.replace(/\s+/g, '_')}_${invoiceNoInput.value.replace(/#/g, '')}.pdf`,
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { 
-                scale: 2.5, 
+                scale: 2, 
                 useCORS: true, 
                 letterRendering: true,
-                backgroundColor: '#ffffff'
+                backgroundColor: '#ffffff',
+                windowWidth: 800, // Forces the layout to render as a desktop-width page in canvas
+                scrollX: 0,       // Prevents offset clipping if the user scrolled
+                scrollY: 0
             },
             jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
@@ -388,23 +382,27 @@ document.addEventListener('DOMContentLoaded', () => {
         btnDownloadPdf.innerHTML = '<i class="loading-spinner"></i> Mengunduh...';
         btnDownloadPdf.disabled = true;
 
-        // Wait 200ms for the browser to layout and paint the new A4 element
-        setTimeout(() => {
-            // Generate PDF from the clone
-            html2pdf().set(opt).from(element).save().then(() => {
-                btnDownloadPdf.innerHTML = originalText;
-                btnDownloadPdf.disabled = false;
-                document.body.removeChild(container); // Clean up
-            }).catch((err) => {
-                console.error('PDF Generation Error:', err);
-                alert('Terjadi kesalahan saat membuat PDF.');
-                btnDownloadPdf.innerHTML = originalText;
-                btnDownloadPdf.disabled = false;
-                if (container.parentNode) {
-                    document.body.removeChild(container); // Clean up
-                }
-            });
-        }, 200);
+        // Generate PDF directly from the unscaled element
+        html2pdf().set(opt).from(renderArea).save().then(() => {
+            // Restore original scaling styles
+            renderArea.style.transform = originalTransform;
+            renderArea.style.transformOrigin = originalTransformOrigin;
+            container.style.height = originalContainerHeight;
+            
+            btnDownloadPdf.innerHTML = originalText;
+            btnDownloadPdf.disabled = false;
+        }).catch((err) => {
+            console.error('PDF Generation Error:', err);
+            alert('Terjadi kesalahan saat membuat PDF.');
+            
+            // Restore original scaling styles in case of error
+            renderArea.style.transform = originalTransform;
+            renderArea.style.transformOrigin = originalTransformOrigin;
+            container.style.height = originalContainerHeight;
+            
+            btnDownloadPdf.innerHTML = originalText;
+            btnDownloadPdf.disabled = false;
+        });
     });
 
     // Print directly using browser print engine
