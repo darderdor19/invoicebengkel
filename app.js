@@ -74,6 +74,30 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${day} ${months[monthIndex]} ${year}`;
     }
 
+    // Helper function to scale A4 invoice preview to fit modal container on mobile screens
+    function adjustPreviewScale() {
+        const renderArea = document.getElementById('invoice-pdf-render');
+        if (!renderArea) return;
+        const container = renderArea.parentElement;
+        if (!container) return;
+
+        const containerWidth = container.clientWidth;
+        const targetWidth = 794; // approx A4 width in pixels (~210mm)
+
+        if (containerWidth < targetWidth) {
+            const scale = containerWidth / targetWidth;
+            renderArea.style.transform = `scale(${scale})`;
+            renderArea.style.transformOrigin = 'top center';
+            container.style.height = `${1122 * scale}px`; // scale container height to match scaled content
+        } else {
+            renderArea.style.transform = 'none';
+            container.style.height = 'auto';
+        }
+    }
+
+    // Recalculate preview scale on screen resize
+    window.addEventListener('resize', adjustPreviewScale);
+
     // Generate unique invoice number default based on a date string
     function generateInvoiceNumber(dateStr) {
         const date = dateStr ? new Date(dateStr) : new Date();
@@ -293,11 +317,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Show Modal
         previewModal.style.display = 'flex';
+        
+        // Recalculate scaling after modal layout settles
+        setTimeout(adjustPreviewScale, 50);
     });
 
     // Close Modal Controls
     function closeModal() {
         previewModal.style.display = 'none';
+        const renderArea = document.getElementById('invoice-pdf-render');
+        if (renderArea && renderArea.parentElement) {
+            renderArea.parentElement.style.height = 'auto';
+        }
     }
 
     btnCloseModal.addEventListener('click', closeModal);
@@ -312,11 +343,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- PDF Export and Printing ---
 
-    // Download PDF handler using html2pdf
+    // Download PDF handler using html2pdf (via A4 cloned rendering to prevent mobile clipping)
     btnDownloadPdf.addEventListener('click', () => {
-        const element = document.getElementById('invoice-pdf-render');
+        const originalElement = document.getElementById('invoice-pdf-render');
         
-        // Remove margins to prevent html2pdf from adding extra whitespace around A4 container
+        // Clone the element to render it off-screen at full native A4 size
+        const element = originalElement.cloneNode(true);
+        
+        // Style the clone to be visible to html2pdf/html2canvas but off-screen and unconstrained by mobile viewport
+        element.style.position = 'absolute';
+        element.style.left = '-9999px';
+        element.style.top = '0';
+        element.style.width = '210mm';
+        element.style.minHeight = '297mm';
+        element.style.display = 'flex';
+        element.style.flexDirection = 'column';
+        element.style.justifyContent = 'space-between';
+        element.style.backgroundColor = '#ffffff';
+        element.style.transform = 'none'; // Ensure scale is reset on download clone
+        
+        document.body.appendChild(element);
+        
+        // Setup options - forcing A4 portrait mode
         const opt = {
             margin:       0,
             filename:     `Invoice_${clientNameInput.value.replace(/\s+/g, '_')}_${invoiceNoInput.value.replace(/#/g, '')}.pdf`,
@@ -335,15 +383,19 @@ document.addEventListener('DOMContentLoaded', () => {
         btnDownloadPdf.innerHTML = '<i class="loading-spinner"></i> Mengunduh...';
         btnDownloadPdf.disabled = true;
 
-        // Generate PDF
+        // Generate PDF from the off-screen clone
         html2pdf().set(opt).from(element).save().then(() => {
             btnDownloadPdf.innerHTML = originalText;
             btnDownloadPdf.disabled = false;
+            document.body.removeChild(element); // Clean up
         }).catch((err) => {
             console.error('PDF Generation Error:', err);
             alert('Terjadi kesalahan saat membuat PDF.');
             btnDownloadPdf.innerHTML = originalText;
             btnDownloadPdf.disabled = false;
+            if (element.parentNode) {
+                document.body.removeChild(element); // Clean up
+            }
         });
     });
 

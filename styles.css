@@ -480,6 +480,7 @@ body {
     background-color: #10121a;
     display: flex;
     justify-content: center;
+    align-items: flex-start; /* Prevent children from shrinking vertically to fit container height */
 }
 
 .modal-footer {
@@ -560,6 +561,13 @@ body {
     background-color: #1e1e1e; /* background wrapper in UI */
     padding: 15px;
     border-radius: 8px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    box-sizing: border-box;
+    flex-shrink: 0; /* Prevent container from shrinking vertically */
 }
 
 /* Strict A4 Styling for screen preview and PDF download */
@@ -923,15 +931,19 @@ body {
         flex: 1 1 calc(50% - 10px);
         justify-content: center;
     }
-    /* scroll wrapper for A4 layout preview on small screens */
+    /* preview scales to fit mobile screen widths */
     .invoice-container-outer {
         padding: 5px;
-        overflow-x: auto;
+        overflow: hidden;
         width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
     }
     .modal-body {
-        justify-content: flex-start;
-        overflow-x: auto;
+        justify-content: center;
+        overflow-x: hidden;
+        padding: 15px 10px;
     }
 }
 
