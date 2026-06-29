@@ -353,7 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
         container.style.position = 'fixed';
         container.style.left = '0';
         container.style.top = '0';
-        container.style.zIndex = '-9999'; // Place it behind the dashboard so it's invisible
+        container.style.zIndex = '1'; // Behind the modal overlay (z-index 1000) but visible to the paint engine
         container.style.width = '210mm';
         container.style.height = '297mm';
         container.style.overflow = 'hidden';
@@ -388,20 +388,23 @@ document.addEventListener('DOMContentLoaded', () => {
         btnDownloadPdf.innerHTML = '<i class="loading-spinner"></i> Mengunduh...';
         btnDownloadPdf.disabled = true;
 
-        // Generate PDF from the clone
-        html2pdf().set(opt).from(element).save().then(() => {
-            btnDownloadPdf.innerHTML = originalText;
-            btnDownloadPdf.disabled = false;
-            document.body.removeChild(container); // Clean up
-        }).catch((err) => {
-            console.error('PDF Generation Error:', err);
-            alert('Terjadi kesalahan saat membuat PDF.');
-            btnDownloadPdf.innerHTML = originalText;
-            btnDownloadPdf.disabled = false;
-            if (container.parentNode) {
+        // Wait 200ms for the browser to layout and paint the new A4 element
+        setTimeout(() => {
+            // Generate PDF from the clone
+            html2pdf().set(opt).from(element).save().then(() => {
+                btnDownloadPdf.innerHTML = originalText;
+                btnDownloadPdf.disabled = false;
                 document.body.removeChild(container); // Clean up
-            }
-        });
+            }).catch((err) => {
+                console.error('PDF Generation Error:', err);
+                alert('Terjadi kesalahan saat membuat PDF.');
+                btnDownloadPdf.innerHTML = originalText;
+                btnDownloadPdf.disabled = false;
+                if (container.parentNode) {
+                    document.body.removeChild(container); // Clean up
+                }
+            });
+        }, 200);
     });
 
     // Print directly using browser print engine
