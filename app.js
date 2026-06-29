@@ -347,22 +347,27 @@ document.addEventListener('DOMContentLoaded', () => {
     btnDownloadPdf.addEventListener('click', () => {
         const originalElement = document.getElementById('invoice-pdf-render');
         
-        // Clone the element to render it off-screen at full native A4 size
+        // Create a wrapper container matching the invoice structure
+        const container = document.createElement('div');
+        container.className = 'invoice-container-outer';
+        container.style.position = 'fixed';
+        container.style.left = '0';
+        container.style.top = '0';
+        container.style.zIndex = '-9999'; // Place it behind the dashboard so it's invisible
+        container.style.width = '210mm';
+        container.style.height = '297mm';
+        container.style.overflow = 'hidden';
+        container.style.opacity = '1';
+        container.style.pointerEvents = 'none';
+
+        // Clone the element to render it at full native A4 size
         const element = originalElement.cloneNode(true);
-        
-        // Style the clone to be visible to html2pdf/html2canvas but off-screen and unconstrained by mobile viewport
-        element.style.position = 'absolute';
-        element.style.left = '-9999px';
-        element.style.top = '0';
+        element.style.transform = 'none'; // Ensure scale is reset on download clone
         element.style.width = '210mm';
         element.style.minHeight = '297mm';
-        element.style.display = 'flex';
-        element.style.flexDirection = 'column';
-        element.style.justifyContent = 'space-between';
-        element.style.backgroundColor = '#ffffff';
-        element.style.transform = 'none'; // Ensure scale is reset on download clone
         
-        document.body.appendChild(element);
+        container.appendChild(element);
+        document.body.appendChild(container);
         
         // Setup options - forcing A4 portrait mode
         const opt = {
@@ -383,18 +388,18 @@ document.addEventListener('DOMContentLoaded', () => {
         btnDownloadPdf.innerHTML = '<i class="loading-spinner"></i> Mengunduh...';
         btnDownloadPdf.disabled = true;
 
-        // Generate PDF from the off-screen clone
+        // Generate PDF from the clone
         html2pdf().set(opt).from(element).save().then(() => {
             btnDownloadPdf.innerHTML = originalText;
             btnDownloadPdf.disabled = false;
-            document.body.removeChild(element); // Clean up
+            document.body.removeChild(container); // Clean up
         }).catch((err) => {
             console.error('PDF Generation Error:', err);
             alert('Terjadi kesalahan saat membuat PDF.');
             btnDownloadPdf.innerHTML = originalText;
             btnDownloadPdf.disabled = false;
-            if (element.parentNode) {
-                document.body.removeChild(element); // Clean up
+            if (container.parentNode) {
+                document.body.removeChild(container); // Clean up
             }
         });
     });

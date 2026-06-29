@@ -945,6 +945,117 @@ body {
         overflow-x: hidden;
         padding: 15px 10px;
     }
+
+    /* Table to Card conversion for mobile */
+    #items-table, 
+    #items-table thead, 
+    #items-table tbody, 
+    #items-table th, 
+    #items-table td, 
+    #items-table tr { 
+        display: block; 
+    }
+    
+    #items-table thead { 
+        display: none !important; /* Hide headers on mobile */
+    }
+    
+    #items-table tr {
+        background-color: #171d2b;
+        border: 1px solid var(--dash-border);
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        padding: 1.25rem;
+        position: relative;
+    }
+    
+    #items-table td { 
+        border: none !important;
+        padding: 6px 0 !important;
+        width: 100% !important;
+        text-align: left !important;
+    }
+    
+    /* Row Number as card header */
+    #items-table td.row-number {
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--dash-accent);
+        border-bottom: 1px solid var(--dash-border) !important;
+        padding-bottom: 8px !important;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+    }
+    #items-table td.row-number::before {
+        content: "Item #";
+    }
+    
+    /* Add labels on mobile */
+    #items-table td:nth-of-type(2)::before { 
+        content: "Deskripsi Pekerjaan / Bahan"; 
+        display: block; 
+        font-size: 0.75rem; 
+        color: var(--dash-text-muted); 
+        margin-bottom: 4px;
+        font-weight: 500;
+    }
+    
+    #items-table td:nth-of-type(3)::before { 
+        content: "Kuantitas (Qty)"; 
+        display: block; 
+        font-size: 0.75rem; 
+        color: var(--dash-text-muted); 
+        margin-bottom: 4px;
+        font-weight: 500;
+    }
+    
+    #items-table td:nth-of-type(4)::before { 
+        content: "Harga Satuan (Rp)"; 
+        display: block; 
+        font-size: 0.75rem; 
+        color: var(--dash-text-muted); 
+        margin-bottom: 4px;
+        font-weight: 500;
+    }
+    
+    #items-table td.row-subtotal {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 1.1rem;
+        color: var(--dash-accent);
+        font-weight: 700;
+        border-top: 1px dashed var(--dash-border) !important;
+        margin-top: 8px;
+        padding-top: 12px !important;
+    }
+    
+    #items-table td.row-subtotal::before { 
+        content: "Subtotal:"; 
+        font-size: 0.8rem; 
+        font-weight: 500;
+        color: var(--dash-text-muted); 
+    }
+    
+    /* Delete button positioning */
+    #items-table td:last-child {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: auto !important;
+        padding: 0 !important;
+    }
+    
+    /* Input overrides on mobile */
+    #items-table input {
+        padding: 10px 12px;
+        font-size: 0.95rem;
+    }
+    
+    #items-table .item-qty {
+        text-align: left !important;
+    }
 }
 
 @media (max-width: 480px) {
